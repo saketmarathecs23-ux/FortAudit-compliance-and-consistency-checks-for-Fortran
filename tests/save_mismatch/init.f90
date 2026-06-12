@@ -1,0 +1,7 @@
+      SUBROUTINE INIT
+C     SAVE present here
+      INTEGER COUNTER
+      COMMON /COUNTERS/ COUNTER
+      SAVE /COUNTERS/
+      COUNTER = 0
+      END

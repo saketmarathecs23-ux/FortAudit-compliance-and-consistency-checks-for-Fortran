@@ -1,0 +1,74 @@
+﻿[96m====================================================[0m
+[1m[96m  FORTRAN COMMON BLOCK SAFETY ANALYZER[0m
+[96m====================================================[0m
+
+  [1mScanning:[0m 3 files
+  [1mCOMMON blocks detected:[0m 6
+
+[91m[1m[ERROR][0m [1mCOMMON block /DLPK01/[0m — Inconsistent memory layout detected
+
+  [90mFile:[0m [95mlegacy_eval\src\opkda1.f[0m[90m:5198[0m
+    COMMON /DLPK01/ DOUBLE PRECISION DELT, DOUBLE PRECISION EPCON, DOUBLE PRECISION SQRTN, DOUBLE PRECISION RSQRTN, INTEGER JPRE, INTEGER JACFLG, INTEGER LOCWP, INTEGER LOCIWP, INTEGER LSAVX, INTEGER KMP, INTEGER MAXL, INTEGER MNEWT, INTEGER NNI, INTEGER NLI, INTEGER NPS, INTEGER NCFN, INTEGER NCFL
+    [2mSize: 84 bytes[0m
+
+  [90mFile:[0m [95mlegacy_eval\src\opkda1.f[0m[90m:7038[0m
+    COMMON /DLPK01/ DOUBLE PRECISION RLSP, INTEGER ILSP
+    [2mSize: 12 bytes[0m
+
+  [1mIssue:[0m
+    Size mismatch: 84 bytes vs 12 bytes. Potential silent memory corruption
+    across translation units.
+
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
+
+[91m[1m[ERROR][0m [1mCOMMON block /DLPK01/[0m — Inconsistent memory layout detected
+
+  [90mFile:[0m [95mlegacy_eval\src\opkda1.f[0m[90m:5198[0m
+    COMMON /DLPK01/ DOUBLE PRECISION DELT, DOUBLE PRECISION EPCON, DOUBLE PRECISION SQRTN, DOUBLE PRECISION RSQRTN, INTEGER JPRE, INTEGER JACFLG, INTEGER LOCWP, INTEGER LOCIWP, INTEGER LSAVX, INTEGER KMP, INTEGER MAXL, INTEGER MNEWT, INTEGER NNI, INTEGER NLI, INTEGER NPS, INTEGER NCFN, INTEGER NCFL
+    [2mSize: 84 bytes[0m
+
+  [90mFile:[0m [95mlegacy_eval\src\opkda1.f[0m[90m:8311[0m
+    COMMON /DLPK01/ DOUBLE PRECISION RLSP, INTEGER ILSP
+    [2mSize: 12 bytes[0m
+
+  [1mIssue:[0m
+    Size mismatch: 84 bytes vs 12 bytes. Potential silent memory corruption
+    across translation units.
+
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
+
+[91m[1m[ERROR][0m [1mCOMMON block /DLPK01/[0m — Type mismatch / type punning
+
+  [90mFile:[0m [95mlegacy_eval\src\opkda1.f[0m[90m:5198[0m
+    COMMON /DLPK01/ DOUBLE PRECISION DELT, DOUBLE PRECISION EPCON, DOUBLE PRECISION SQRTN, DOUBLE PRECISION RSQRTN, INTEGER JPRE, INTEGER JACFLG, INTEGER LOCWP, INTEGER LOCIWP, INTEGER LSAVX, INTEGER KMP, INTEGER MAXL, INTEGER MNEWT, INTEGER NNI, INTEGER NLI, INTEGER NPS, INTEGER NCFN, INTEGER NCFL
+    [2mSize: 84 bytes[0m
+
+  [90mFile:[0m [95mlegacy_eval\src\opkda1.f[0m[90m:7038[0m
+    COMMON /DLPK01/ DOUBLE PRECISION RLSP, INTEGER ILSP
+    [2mSize: 12 bytes[0m
+
+  [1mIssue:[0m
+    Position 2: 'EPCON' declared DOUBLE PRECISION but 'ILSP' declared
+    INTEGER. Reinterpreting the same bytes as a different type is undefined
+    behavior.
+
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
+
+[91m[1m[ERROR][0m [1mCOMMON block /DLPK01/[0m — Type mismatch / type punning
+
+  ... (diagnostics for /DLS001/, /DLSS01/, /DLSA01/, /DLSR01/, /DLS002/ omitted) ...
+
+[96m====================================================[0m
+[1m  SUMMARY[0m
+[96m====================================================[0m
+  Files scanned........ 3
+  COMMON blocks........ 6
+  [91mErrors............... 113[0m
+  [93mWarnings............. 0[0m
+  [96mInfo................. 0[0m
+
+  [91m[1m✗ Unsafe COMMON block usage detected — migration to MODULEs recommended.[0m
+

@@ -1,0 +1,6 @@
+      SUBROUTINE DPWRITE
+C     DOUBLE PRECISION array = 8 * 10 = 80 bytes
+      DOUBLE PRECISION COORD(10)
+      COMMON /GEOM/ COORD
+      COORD(1) = 1.0D0
+      END

@@ -1,0 +1,2 @@
+# FORTRAN COMMON Block Memory Safety Analyzer
+# No third-party dependencies — pure Python 3.7+ standard library.
