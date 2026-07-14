@@ -48,7 +48,7 @@ Common failure modes this tool catches:
 |---|-------------|--------|
 | 1 | Multi-file COMMON collector + global database | ✅ [`analyzer.py`](analyzer.py) builds a `name → [declarations]` DB |
 | 2 | Validator: size, type punning, alignment, EQUIVALENCE, SAVE | ✅ [`validator/checks.py`](validator/checks.py) |
-| 3 | Test suite of 20+ multi-file programs | ✅ 22 files / 10 scenarios in [`tests/`](tests/) |
+| 3 | Test suite of 20+ multi-file programs | ✅ 33 files / 11 scenarios in [`tests/`](tests/), 3 files per scenario to prove checks generalize beyond a single file pair |
 | 4 | Evaluation on a real legacy codebase | ✅ ODEPACK, see [`legacy_eval/`](legacy_eval/README.md) |
 | 5 | Migration advisor (COMMON → MODULE) | ✅ printed per problem block |
 
@@ -64,7 +64,7 @@ project/
 │   └── reporter.py        # colored, compiler-style output + migration advisor
 ├── models/
 │   └── common_block.py    # Variable / CommonDeclaration data models + sizes
-├── tests/                 # 22 files across 10 scenarios
+├── tests/                 # 33 files across 11 scenarios (3 files each)
 │   ├── size_mismatch/        type_punning/      ordering_mismatch/
 │   ├── save_mismatch/        equivalence_conflict/
 │   ├── alignment_issue/      char_mismatch/     double_precision/

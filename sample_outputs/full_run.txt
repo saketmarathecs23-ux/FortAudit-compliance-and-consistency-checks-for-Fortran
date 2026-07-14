@@ -1,328 +1,436 @@
-﻿====================================================
-  FORTRAN COMMON BLOCK SAFETY ANALYZER
-====================================================
+[96m====================================================[0m
+[1m[96m  FORTRAN COMMON BLOCK SAFETY ANALYZER[0m
+[96m====================================================[0m
 
-  Scanning: 22 files
-  COMMON blocks detected: 12
+  [1mScanning:[0m 33 files
+  [1mCOMMON blocks detected:[0m 12
 
-[ERROR] COMMON block /BUF/ — EQUIVALENCE storage-association conflict
+[91m[1m[ERROR][0m [1mCOMMON block /BUF/[0m — EQUIVALENCE storage-association conflict
 
-  File: tests\equivalence_conflict\packer.f90:6
+  [90mFile:[0m [95mtests\equivalence_conflict\packer.f90[0m[90m:6[0m
     COMMON /BUF/ REAL RBUF(4)
-    Size: 16 bytes
-    EQUIVALENCE (REAL RBUF(4) <=> INTEGER IBUF(4))
+    [2mSize: 16 bytes[0m
+    [2mEQUIVALENCE (REAL RBUF(4) <=> INTEGER IBUF(4))[0m
 
-  Issue:
+  [1mIssue:[0m
     In tests/equivalence_conflict\packer.f90: EQUIVALENCE (REAL RBUF(4) <=>
     INTEGER IBUF(4)) forces incompatible types (INTEGER, REAL) to share the
     same storage inside /BUF/. Writing through one alias and reading the
     other is type punning.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[WARNING] COMMON block /BUF/ — Inconsistent EQUIVALENCE association across files
+[93m[1m[WARNING][0m [1mCOMMON block /BUF/[0m — Inconsistent EQUIVALENCE association across files
 
-  File: tests\equivalence_conflict\packer.f90:6
+  [90mFile:[0m [95mtests\equivalence_conflict\packer.f90[0m[90m:6[0m
     COMMON /BUF/ REAL RBUF(4)
-    Size: 16 bytes
-    EQUIVALENCE (REAL RBUF(4) <=> INTEGER IBUF(4))
+    [2mSize: 16 bytes[0m
+    [2mEQUIVALENCE (REAL RBUF(4) <=> INTEGER IBUF(4))[0m
 
-  File: tests\equivalence_conflict\unpacker.f90:5
+  [90mFile:[0m [95mtests\equivalence_conflict\thirdbuf.f90[0m[90m:5[0m
     COMMON /BUF/ REAL RBUF(4)
-    Size: 16 bytes
+    [2mSize: 16 bytes[0m
 
-  Issue:
+  [90mFile:[0m [95mtests\equivalence_conflict\unpacker.f90[0m[90m:5[0m
+    COMMON /BUF/ REAL RBUF(4)
+    [2mSize: 16 bytes[0m
+
+  [1mIssue:[0m
     EQUIVALENCE alters /BUF/ in tests/equivalence_conflict\packer.f90 but
-    not in tests/equivalence_conflict\unpacker.f90. The effective storage
-    layout differs between translation units.
+    not in tests/equivalence_conflict\thirdbuf.f90,
+    tests/equivalence_conflict\unpacker.f90. The effective storage layout
+    differs between translation units.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[WARNING] COMMON block /COUNTERS/ — SAVE inconsistency
+[93m[1m[WARNING][0m [1mCOMMON block /COUNTERS/[0m — SAVE inconsistency
 
-  File: tests\save_mismatch\init.f90:4
+  [90mFile:[0m [95mtests\save_mismatch\init.f90[0m[90m:4[0m
     COMMON /COUNTERS/ INTEGER COUNTER
-    Size: 4 bytes  (SAVE)
+    [2mSize: 4 bytes  (SAVE)[0m
 
-  File: tests\save_mismatch\update.f90:4
+  [90mFile:[0m [95mtests\save_mismatch\thirdfile.f90[0m[90m:6[0m
     COMMON /COUNTERS/ INTEGER COUNTER
-    Size: 4 bytes
+    [2mSize: 4 bytes  (SAVE)[0m
 
-  Issue:
-    SAVE /COUNTERS/ present in 1 file(s) but missing in
+  [90mFile:[0m [95mtests\save_mismatch\update.f90[0m[90m:4[0m
+    COMMON /COUNTERS/ INTEGER COUNTER
+    [2mSize: 4 bytes[0m
+
+  [1mIssue:[0m
+    SAVE /COUNTERS/ present in 2 file(s) but missing in
     tests/save_mismatch\update.f90. Lifetime of the block is inconsistent.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[ERROR] COMMON block /DATA/ — Inconsistent memory layout detected
+[91m[1m[ERROR][0m [1mCOMMON block /DATA/[0m — Inconsistent memory layout detected
 
-  File: tests\size_mismatch\physics.f90:4
+  [90mFile:[0m [95mtests\size_mismatch\physics.f90[0m[90m:4[0m
     COMMON /DATA/ REAL TEMP(100)
-    Size: 400 bytes
+    [2mSize: 400 bytes[0m
 
-  File: tests\size_mismatch\solver.f90:4
+  [90mFile:[0m [95mtests\size_mismatch\solver.f90[0m[90m:4[0m
     COMMON /DATA/ INTEGER GRID(200)
-    Size: 800 bytes
+    [2mSize: 800 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     Size mismatch: 400 bytes vs 800 bytes. Potential silent memory
     corruption across translation units.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[ERROR] COMMON block /DATA/ — Type mismatch / type punning
+[91m[1m[ERROR][0m [1mCOMMON block /DATA/[0m — Type mismatch / type punning
 
-  File: tests\size_mismatch\physics.f90:4
+  [90mFile:[0m [95mtests\size_mismatch\physics.f90[0m[90m:4[0m
     COMMON /DATA/ REAL TEMP(100)
-    Size: 400 bytes
+    [2mSize: 400 bytes[0m
 
-  File: tests\size_mismatch\solver.f90:4
+  [90mFile:[0m [95mtests\size_mismatch\solver.f90[0m[90m:4[0m
     COMMON /DATA/ INTEGER GRID(200)
-    Size: 800 bytes
+    [2mSize: 800 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     Position 1: 'TEMP' declared REAL but 'GRID' declared INTEGER.
     Reinterpreting the same bytes as a different type is undefined behavior.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[ERROR] COMMON block /GEOM/ — Inconsistent memory layout detected
+[91m[1m[ERROR][0m [1mCOMMON block /DATA/[0m — Type mismatch / type punning
 
-  File: tests\double_precision\dpread.f90:4
+  [90mFile:[0m [95mtests\size_mismatch\physics.f90[0m[90m:4[0m
+    COMMON /DATA/ REAL TEMP(100)
+    [2mSize: 400 bytes[0m
+
+  [90mFile:[0m [95mtests\size_mismatch\thirdmod.f90[0m[90m:6[0m
+    COMMON /DATA/ DOUBLE PRECISION VALS(50)
+    [2mSize: 400 bytes[0m
+
+  [1mIssue:[0m
+    Position 1: 'TEMP' declared REAL but 'VALS' declared DOUBLE PRECISION.
+    Reinterpreting the same bytes as a different type is undefined behavior.
+
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
+
+[91m[1m[ERROR][0m [1mCOMMON block /GEOM/[0m — Inconsistent memory layout detected
+
+  [90mFile:[0m [95mtests\double_precision\dpread.f90[0m[90m:4[0m
     COMMON /GEOM/ REAL COORD(10)
-    Size: 40 bytes
+    [2mSize: 40 bytes[0m
 
-  File: tests\double_precision\dpwrite.f90:4
+  [90mFile:[0m [95mtests\double_precision\dpthird.f90[0m[90m:5[0m
     COMMON /GEOM/ DOUBLE PRECISION COORD(10)
-    Size: 80 bytes
+    [2mSize: 80 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     Size mismatch: 40 bytes vs 80 bytes. Potential silent memory corruption
     across translation units.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[ERROR] COMMON block /GEOM/ — Type mismatch / type punning
+[91m[1m[ERROR][0m [1mCOMMON block /GEOM/[0m — Inconsistent memory layout detected
 
-  File: tests\double_precision\dpread.f90:4
+  [90mFile:[0m [95mtests\double_precision\dpread.f90[0m[90m:4[0m
     COMMON /GEOM/ REAL COORD(10)
-    Size: 40 bytes
+    [2mSize: 40 bytes[0m
 
-  File: tests\double_precision\dpwrite.f90:4
+  [90mFile:[0m [95mtests\double_precision\dpwrite.f90[0m[90m:4[0m
     COMMON /GEOM/ DOUBLE PRECISION COORD(10)
-    Size: 80 bytes
+    [2mSize: 80 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
+    Size mismatch: 40 bytes vs 80 bytes. Potential silent memory corruption
+    across translation units.
+
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
+
+[91m[1m[ERROR][0m [1mCOMMON block /GEOM/[0m — Type mismatch / type punning
+
+  [90mFile:[0m [95mtests\double_precision\dpread.f90[0m[90m:4[0m
+    COMMON /GEOM/ REAL COORD(10)
+    [2mSize: 40 bytes[0m
+
+  [90mFile:[0m [95mtests\double_precision\dpthird.f90[0m[90m:5[0m
+    COMMON /GEOM/ DOUBLE PRECISION COORD(10)
+    [2mSize: 80 bytes[0m
+
+  [1mIssue:[0m
     Position 1: 'COORD' declared REAL but 'COORD' declared DOUBLE PRECISION.
     Reinterpreting the same bytes as a different type is undefined behavior.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[ERROR] COMMON block /IDENT/ — Inconsistent memory layout detected
+[91m[1m[ERROR][0m [1mCOMMON block /GEOM/[0m — Type mismatch / type punning
 
-  File: tests\char_mismatch\stra.f90:4
+  [90mFile:[0m [95mtests\double_precision\dpread.f90[0m[90m:4[0m
+    COMMON /GEOM/ REAL COORD(10)
+    [2mSize: 40 bytes[0m
+
+  [90mFile:[0m [95mtests\double_precision\dpwrite.f90[0m[90m:4[0m
+    COMMON /GEOM/ DOUBLE PRECISION COORD(10)
+    [2mSize: 80 bytes[0m
+
+  [1mIssue:[0m
+    Position 1: 'COORD' declared REAL but 'COORD' declared DOUBLE PRECISION.
+    Reinterpreting the same bytes as a different type is undefined behavior.
+
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
+
+[91m[1m[ERROR][0m [1mCOMMON block /IDENT/[0m — Inconsistent memory layout detected
+
+  [90mFile:[0m [95mtests\char_mismatch\stra.f90[0m[90m:4[0m
     COMMON /IDENT/ CHARACTER NAME
-    Size: 8 bytes
+    [2mSize: 8 bytes[0m
 
-  File: tests\char_mismatch\strb.f90:4
+  [90mFile:[0m [95mtests\char_mismatch\strb.f90[0m[90m:4[0m
     COMMON /IDENT/ CHARACTER NAME
-    Size: 16 bytes
+    [2mSize: 16 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     Size mismatch: 8 bytes vs 16 bytes. Potential silent memory corruption
     across translation units.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[ERROR] COMMON block /MESHDATA/ — Type mismatch / type punning
+[91m[1m[ERROR][0m [1mCOMMON block /IDENT/[0m — Inconsistent memory layout detected
 
-  File: tests\freeform_case\grid_mod.f90:6
+  [90mFile:[0m [95mtests\char_mismatch\stra.f90[0m[90m:4[0m
+    COMMON /IDENT/ CHARACTER NAME
+    [2mSize: 8 bytes[0m
+
+  [90mFile:[0m [95mtests\char_mismatch\strc.f90[0m[90m:5[0m
+    COMMON /IDENT/ CHARACTER NAME
+    [2mSize: 32 bytes[0m
+
+  [1mIssue:[0m
+    Size mismatch: 8 bytes vs 32 bytes. Potential silent memory corruption
+    across translation units.
+
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
+
+[91m[1m[ERROR][0m [1mCOMMON block /MESHDATA/[0m — Type mismatch / type punning
+
+  [90mFile:[0m [95mtests\freeform_case\grid_mod.f90[0m[90m:6[0m
     COMMON /MESHDATA/ REAL nodes(100), INTEGER ncount
-    Size: 404 bytes
+    [2mSize: 404 bytes[0m
 
-  File: tests\freeform_case\grid_use.f90:6
+  [90mFile:[0m [95mtests\freeform_case\grid_use.f90[0m[90m:6[0m
     COMMON /MESHDATA/ INTEGER nodes(100), INTEGER ncount
-    Size: 404 bytes
+    [2mSize: 404 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     Position 1: 'nodes' declared REAL but 'nodes' declared INTEGER.
     Reinterpreting the same bytes as a different type is undefined behavior.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[INFO] COMMON block /MIX/ — Possible alignment issue
+[96m[INFO][0m [1mCOMMON block /MIX/[0m — Possible alignment issue
 
-  File: tests\alignment_issue\misaligned.f90:6
+  [90mFile:[0m [95mtests\alignment_issue\misaligned.f90[0m[90m:6[0m
     COMMON /MIX/ CHARACTER FLAG, DOUBLE PRECISION VALUE
-    Size: 9 bytes
+    [2mSize: 9 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     In tests/alignment_issue\misaligned.f90: 'VALUE' (DOUBLE PRECISION) sits
     at offset 1, not a multiple of its 8-byte alignment. May cause padding
     differences or slow unaligned access.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[INFO] COMMON block /MIX/ — Possible alignment issue
+[96m[INFO][0m [1mCOMMON block /MIX/[0m — Possible alignment issue
 
-  File: tests\alignment_issue\reader2.f90:5
+  [90mFile:[0m [95mtests\alignment_issue\reader2.f90[0m[90m:5[0m
     COMMON /MIX/ CHARACTER FLAG, DOUBLE PRECISION VALUE
-    Size: 9 bytes
+    [2mSize: 9 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     In tests/alignment_issue\reader2.f90: 'VALUE' (DOUBLE PRECISION) sits at
     offset 1, not a multiple of its 8-byte alignment. May cause padding
     differences or slow unaligned access.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[WARNING] COMMON block /PARAMS/ — Variable ordering mismatch
+[96m[INFO][0m [1mCOMMON block /MIX/[0m — Possible alignment issue
 
-  File: tests\ordering_mismatch\moduleA.f90:5
+  [90mFile:[0m [95mtests\alignment_issue\reader3.f90[0m[90m:7[0m
+    COMMON /MIX/ CHARACTER FLAG, DOUBLE PRECISION VALUE
+    [2mSize: 9 bytes[0m
+
+  [1mIssue:[0m
+    In tests/alignment_issue\reader3.f90: 'VALUE' (DOUBLE PRECISION) sits at
+    offset 1, not a multiple of its 8-byte alignment. May cause padding
+    differences or slow unaligned access.
+
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
+
+[93m[1m[WARNING][0m [1mCOMMON block /PARAMS/[0m — Variable ordering mismatch
+
+  [90mFile:[0m [95mtests\ordering_mismatch\moduleA.f90[0m[90m:5[0m
     COMMON /PARAMS/ REAL A, REAL B
-    Size: 8 bytes
+    [2mSize: 8 bytes[0m
 
-  File: tests\ordering_mismatch\moduleB.f90:5
+  [90mFile:[0m [95mtests\ordering_mismatch\moduleB.f90[0m[90m:5[0m
     COMMON /PARAMS/ REAL B, REAL A
-    Size: 8 bytes
+    [2mSize: 8 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     Order ['A', 'B'] vs ['B', 'A']. Same names, different order — each file
     sees different data at the same offset.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[ERROR] COMMON block /STATE/ — Type mismatch / type punning
+[91m[1m[ERROR][0m [1mCOMMON block /STATE/[0m — Type mismatch / type punning
 
-  File: tests\type_punning\reader.f90:4
+  [90mFile:[0m [95mtests\type_punning\reader.f90[0m[90m:4[0m
     COMMON /STATE/ INTEGER VALUE
-    Size: 4 bytes
+    [2mSize: 4 bytes[0m
 
-  File: tests\type_punning\writer.f90:4
+  [90mFile:[0m [95mtests\type_punning\thirdreader.f90[0m[90m:5[0m
+    COMMON /STATE/ LOGICAL VALUE
+    [2mSize: 4 bytes[0m
+
+  [1mIssue:[0m
+    Position 1: 'VALUE' declared INTEGER but 'VALUE' declared LOGICAL.
+    Reinterpreting the same bytes as a different type is undefined behavior.
+
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
+
+[91m[1m[ERROR][0m [1mCOMMON block /STATE/[0m — Type mismatch / type punning
+
+  [90mFile:[0m [95mtests\type_punning\reader.f90[0m[90m:4[0m
+    COMMON /STATE/ INTEGER VALUE
+    [2mSize: 4 bytes[0m
+
+  [90mFile:[0m [95mtests\type_punning\writer.f90[0m[90m:4[0m
     COMMON /STATE/ REAL VALUE
-    Size: 4 bytes
+    [2mSize: 4 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     Position 1: 'VALUE' declared INTEGER but 'VALUE' declared REAL.
     Reinterpreting the same bytes as a different type is undefined behavior.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-[ERROR] COMMON block /STATE2/ — Type mismatch / type punning
+[91m[1m[ERROR][0m [1mCOMMON block /STATE2/[0m — Type mismatch / type punning
 
-  File: tests\multi_block\engine.f90:7
+  [90mFile:[0m [95mtests\multi_block\engine.f90[0m[90m:7[0m
     COMMON /STATE2/ INTEGER MODE
-    Size: 4 bytes
+    [2mSize: 4 bytes[0m
 
-  File: tests\multi_block\monitor.f90:7
+  [90mFile:[0m [95mtests\multi_block\monitor.f90[0m[90m:7[0m
     COMMON /STATE2/ REAL MODE
-    Size: 4 bytes
+    [2mSize: 4 bytes[0m
 
-  Issue:
+  [1mIssue:[0m
     Position 1: 'MODE' declared INTEGER but 'MODE' declared REAL.
     Reinterpreting the same bytes as a different type is undefined behavior.
 
-  Suggested Fix: Replace COMMON block with a MODULE
-  --------------------------------------------------
+  [1m[92mSuggested Fix:[0m Replace COMMON block with a MODULE
+  [2m--------------------------------------------------[0m
 
-====================================================
-  MIGRATION ADVISOR
-====================================================
+[96m====================================================[0m
+[1m  MIGRATION ADVISOR[0m
+[96m====================================================[0m
 
-  Suggested modernization for /BUF/:
+  [1m[92mSuggested modernization for /BUF/:[0m
 
-  MODULE BufData
-    IMPLICIT NONE
-    REAL :: RBUF(4)
-  END MODULE BufData
+  [92mMODULE BufData[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  REAL :: RBUF(4)[0m
+  [92mEND MODULE BufData[0m
 
-  Suggested modernization for /COUNTERS/:
+  [1m[92mSuggested modernization for /COUNTERS/:[0m
 
-  MODULE CountersData
-    IMPLICIT NONE
-    INTEGER :: COUNTER
-  END MODULE CountersData
+  [92mMODULE CountersData[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  INTEGER :: COUNTER[0m
+  [92mEND MODULE CountersData[0m
 
-  Suggested modernization for /DATA/:
+  [1m[92mSuggested modernization for /DATA/:[0m
 
-  MODULE DataData
-    IMPLICIT NONE
-    REAL :: TEMP(100)
-  END MODULE DataData
+  [92mMODULE DataData[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  REAL :: TEMP(100)[0m
+  [92mEND MODULE DataData[0m
 
-  Suggested modernization for /GEOM/:
+  [1m[92mSuggested modernization for /GEOM/:[0m
 
-  MODULE GeomData
-    IMPLICIT NONE
-    REAL :: COORD(10)
-  END MODULE GeomData
+  [92mMODULE GeomData[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  REAL :: COORD(10)[0m
+  [92mEND MODULE GeomData[0m
 
-  Suggested modernization for /IDENT/:
+  [1m[92mSuggested modernization for /IDENT/:[0m
 
-  MODULE IdentData
-    IMPLICIT NONE
-    CHARACTER :: NAME
-  END MODULE IdentData
+  [92mMODULE IdentData[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  CHARACTER :: NAME[0m
+  [92mEND MODULE IdentData[0m
 
-  Suggested modernization for /MESHDATA/:
+  [1m[92mSuggested modernization for /MESHDATA/:[0m
 
-  MODULE MeshdataData
-    IMPLICIT NONE
-    REAL :: nodes(100)
-    INTEGER :: ncount
-  END MODULE MeshdataData
+  [92mMODULE MeshdataData[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  REAL :: nodes(100)[0m
+  [92m  INTEGER :: ncount[0m
+  [92mEND MODULE MeshdataData[0m
 
-  Suggested modernization for /MIX/:
+  [1m[92mSuggested modernization for /MIX/:[0m
 
-  MODULE MixData
-    IMPLICIT NONE
-    CHARACTER :: FLAG
-    DOUBLE PRECISION :: VALUE
-  END MODULE MixData
+  [92mMODULE MixData[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  CHARACTER :: FLAG[0m
+  [92m  DOUBLE PRECISION :: VALUE[0m
+  [92mEND MODULE MixData[0m
 
-  Suggested modernization for /PARAMS/:
+  [1m[92mSuggested modernization for /PARAMS/:[0m
 
-  MODULE ParamsData
-    IMPLICIT NONE
-    REAL :: A
-    REAL :: B
-  END MODULE ParamsData
+  [92mMODULE ParamsData[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  REAL :: A[0m
+  [92m  REAL :: B[0m
+  [92mEND MODULE ParamsData[0m
 
-  Suggested modernization for /STATE/:
+  [1m[92mSuggested modernization for /STATE/:[0m
 
-  MODULE StateData
-    IMPLICIT NONE
-    INTEGER :: VALUE
-  END MODULE StateData
+  [92mMODULE StateData[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  INTEGER :: VALUE[0m
+  [92mEND MODULE StateData[0m
 
-  Suggested modernization for /STATE2/:
+  [1m[92mSuggested modernization for /STATE2/:[0m
 
-  MODULE State2Data
-    IMPLICIT NONE
-    INTEGER :: MODE
-  END MODULE State2Data
+  [92mMODULE State2Data[0m
+  [92m  IMPLICIT NONE[0m
+  [92m  INTEGER :: MODE[0m
+  [92mEND MODULE State2Data[0m
 
-====================================================
-  SUMMARY
-====================================================
-  Files scanned........ 22
+[96m====================================================[0m
+[1m  SUMMARY[0m
+[96m====================================================[0m
+  Files scanned........ 33
   COMMON blocks........ 12
-  Errors............... 9
-  Warnings............. 3
-  Info................. 2
+  [91mErrors............... 14[0m
+  [93mWarnings............. 3[0m
+  [96mInfo................. 3[0m
 
-  ✗ Unsafe COMMON block usage detected — migration to MODULEs recommended.
+  [91m[1m✗ Unsafe COMMON block usage detected — migration to MODULEs recommended.[0m
 
